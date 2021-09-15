@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import Form from 'react-bootstrap/Form'
 import Button from "react-bootstrap/Button";
 import "./Login.css"
+import {login} from "../services/auth.service"
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default () => {
@@ -20,10 +21,16 @@ export default () => {
         setPassword(password);
     }
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        login(username,password);
+    }
+
     return (
         <div className="Login">
             <div className="Login-title">Login</div>
-            <Form className="d-flex flex-column">
+            <Form onSubmit={handleSubmit} className="d-flex flex-column">
                 <Form.Group className="mb-3">
                     <Form.Label>Username</Form.Label>
                     <Form.Control type="text" placeholder="Enter username" value={username}

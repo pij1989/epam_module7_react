@@ -9,7 +9,7 @@ import Main from "./components/Main";
 function App() {
     return (
         <div className="App">
-            <BrowserRouter>
+            {/*<BrowserRouter>
                 <Header/>
                 <Main>
                     <Switch>
@@ -17,7 +17,12 @@ function App() {
                     </Switch>
                 </Main>
                 <Footer/>
-            </BrowserRouter>
+            </BrowserRouter>*/}
+            <Header/>
+            <Main>
+                <Login/>
+            </Main>
+            <Footer/>
         </div>
     );
 }
