@@ -2,10 +2,6 @@
     grid-area: main;
     background: #c0c0c0;
     min-height: calc(100vh - 112px);
-}
-
-.Main-login-container {
     display: flex;
     justify-content: center;
-    align-items: center;
 }
