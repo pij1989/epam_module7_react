@@ -1,13 +1,17 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Form from 'react-bootstrap/Form'
 import Button from "react-bootstrap/Button";
 import "./Login.css"
 import {login} from "../services/auth.service"
+import ErrorAuth from "./ErrorAuth";
+import {Redirect} from "react-router-dom";
 
 // eslint-disable-next-line import/no-anonymous-default-export
-export default () => {
-    const [username, setUserName] = useState();
-    const [password, setPassword] = useState();
+export default (props) => {
+    const [username, setUserName] = useState('');
+    const [password, setPassword] = useState('');
+
+    const {handleAuthError, authError} = props;
 
     const handleChangeUsername = (event) => {
         let username = event.target.value;
@@ -24,7 +28,26 @@ export default () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        login(username,password);
+        login(username, password)
+            .then(
+                user => {
+                    props.handleAuthLogin(true, {username: user.username, role: user.role});
+                    console.log(props.auth)
+                },
+                message => {
+                    console.log(message);
+                    props.handleAuthError(true, message);
+                });
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            handleAuthError(false, '');
+        }, 1000)
+    }, [authError.isAuthError])
+
+    if (props.auth.loggedIn) {
+        return <Redirect to="/home"/>;
     }
 
     return (
@@ -52,8 +75,8 @@ export default () => {
                 <Button variant="primary" type="submit" className="Login-button">
                     Submit
                 </Button>
-
             </Form>
+            {authError.isAuthError ? <ErrorAuth message={authError.errorMassage}/> : null}
         </div>
     )
 }
