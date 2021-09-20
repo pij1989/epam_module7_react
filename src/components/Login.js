@@ -10,12 +10,12 @@ import * as yup from "yup";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default (props) => {
-    const [username, setUserName] = useState('');
-    const [password, setPassword] = useState('');
+    /*const [username, setUserName] = useState('');
+    const [password, setPassword] = useState('');*/
 
     const {handleAuthError, authError} = props;
 
-    const handleChangeUsername = (event) => {
+    /*const handleChangeUsername = (event) => {
         let username = event.target.value;
         console.log(`Username: ${username}`);
         setUserName(username);
@@ -41,7 +41,7 @@ export default (props) => {
                     props.handleAuthError(true, message);
                 });
     }
-
+*/
     useEffect(() => {
         setTimeout(() => {
             handleAuthError(false, '');
@@ -53,26 +53,28 @@ export default (props) => {
     }
 
     const validationSchema = yup.object().shape({
-        username: yup.string().max(30, 'Username field length must not be greater than 30 characters').min(3, 'Username field length must not be less than 3 characters').required(),
-        password: yup.string().required()
+        username: yup.string()
+            .max(30, 'Username field length must not be greater than 30 characters')
+            .min(3, 'Username field length must not be less than 3 characters')
+            .required(),
+        password: yup.string()
+            .max(30, 'Password field length must not be greater than 30 characters')
+            .min(4, 'Password field length must not be less than 3 characters')
+            .required()
     });
 
     return (
         <div className="Login">
             <div className="Login-title">Login</div>
-
             <Formik
                 validationSchema={validationSchema}
                 onSubmit={values => {
-                    console.log(values);
                     login(values.username, values.password)
                         .then(
                             user => {
                                 props.handleAuthLogin(true, {username: user.username, role: user.role});
-                                console.log(props.auth)
                             },
                             message => {
-                                console.log(message);
                                 props.handleAuthError(true, message);
                             });
                 }}
@@ -84,20 +86,22 @@ export default (props) => {
                 {({
                       handleSubmit,
                       handleChange,
-                      handleBlur,
                       values,
-                      touched,
-                      isValid,
                       errors,
                   }) => (
-                    <Form onSubmit={handleSubmit} className="d-flex flex-column">
+                    <Form noValidate onSubmit={handleSubmit} className="d-flex flex-column">
                         <Form.Group className="mb-3">
                             <Form.Label>Username</Form.Label>
                             <Form.Control type="text"
                                           placeholder="Enter username"
                                           name="username"
                                           value={values.username}
-                                          onChange={handleChange}/>
+                                          onChange={handleChange}
+                                          isInvalid={!!errors.username}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.username}
+                            </Form.Control.Feedback>
                             <Form.Text className="text-muted">
                                 Username sample: 'Ivan'
                             </Form.Text>
@@ -109,9 +113,14 @@ export default (props) => {
                                           placeholder="Enter password"
                                           name="password"
                                           value={values.password}
-                                          onChange={handleChange}/>
+                                          onChange={handleChange}
+                                          isInvalid = {!!errors.password}
+                            />
+                            <Form.Control.Feedback type="invalid">
+                                {errors.password}
+                            </Form.Control.Feedback>
                             <Form.Text className="text-muted">
-                                Password should be more then 8 and less then 40 symbol
+                                Password should be greater than 4 and less than 30 characters
                             </Form.Text>
                         </Form.Group>
 

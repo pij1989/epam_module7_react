@@ -17,8 +17,13 @@ export default () => {
 
     return (
         <Navbar bg="dark" expand="lg" variant="dark" className="Header justify-content-between px-4">
-            <Navbar.Brand href="#home">Admin UI</Navbar.Brand>
-            {auth.loggedIn ? <Button onClick={handleClick} variant="success">Logout</Button> : null}
+            <div>
+                <Navbar.Brand href="#home">Admin UI</Navbar.Brand>
+            </div>
+            <div className="d-flex justify-content-end">
+                {localStorage.getItem('username') ? <div style={{color:'white'}}>{localStorage.getItem('username')}</div> : null}
+                {auth.loggedIn ? <Button onClick={handleClick} variant="success">Logout</Button> : null}
+            </div>
         </Navbar>
     )
 }
