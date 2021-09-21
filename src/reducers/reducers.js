@@ -1,4 +1,4 @@
-import {AUTH_ERROR, AUTH_LOGIN, AUTH_LOGOUT} from "../action/actionTypes";
+import {AUTH_ERROR, AUTH_LOGIN, AUTH_LOGOUT, RECEIVE_CERTIFICATES} from "../action/actionTypes";
 
 export const authReducer = (state = {}, action) => {
     switch (action.type) {
@@ -30,5 +30,13 @@ export const authErrorReducer = (state = {}, action) => {
         default:
             return state;
     }
+}
 
+export const certificatesReducer = (state = [], action) => {
+    switch (action.type) {
+        case RECEIVE_CERTIFICATES:
+            return action.certificates
+        default:
+            return state;
+    }
 }

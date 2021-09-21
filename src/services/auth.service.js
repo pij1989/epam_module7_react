@@ -30,6 +30,14 @@ export const logout = () => {
     localStorage.removeItem('role');
 }
 
+export const checkAuth = (response) => {
+    if (response.status === 401) {
+        logout();
+        return false;
+    }
+    return true;
+}
+
 /*
 export const login = (username, password) => {
     let user;
