@@ -12,11 +12,13 @@ import HomePage from "./components/HomePage";
 import storage from 'redux-persist/lib/storage';
 import {persistReducer, persistStore} from 'redux-persist';
 import {PersistGate} from 'redux-persist/integration/react'
+import PageNotFound from "./components/PageNotFound";
+import Certificates from "./components/Certificates";
 
 const rootPersistConfig = {
     key: 'root',
     storage: storage,
-    blacklist : ['authError']
+    blacklist: ['authError']
 }
 
 const rootReducer = combineReducers({
@@ -40,7 +42,8 @@ function App() {
                         <Main>
                             <Switch>
                                 <Route exact path="/" component={LoginContainer}/>
-                                <Route exact path="/home" component={HomePage}/>
+                                <Route exact path="/home" component={Certificates}/>
+                                <Route component={PageNotFound}/>
                             </Switch>
                         </Main>
                         <Footer/>

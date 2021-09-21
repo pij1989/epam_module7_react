@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import Form from 'react-bootstrap/Form'
 import Button from "react-bootstrap/Button";
 import "./Login.css"
@@ -12,8 +12,6 @@ import * as yup from "yup";
 export default (props) => {
     /*const [username, setUserName] = useState('');
     const [password, setPassword] = useState('');*/
-
-    const {handleAuthError, authError} = props;
 
     /*const handleChangeUsername = (event) => {
         let username = event.target.value;
@@ -42,6 +40,9 @@ export default (props) => {
                 });
     }
 */
+
+    const {handleAuthError, authError} = props;
+
     useEffect(() => {
         setTimeout(() => {
             handleAuthError(false, '');
@@ -114,7 +115,7 @@ export default (props) => {
                                           name="password"
                                           value={values.password}
                                           onChange={handleChange}
-                                          isInvalid = {!!errors.password}
+                                          isInvalid={!!errors.password}
                             />
                             <Form.Control.Feedback type="invalid">
                                 {errors.password}
