@@ -1,10 +1,13 @@
-import React from "react";
 import {fetchCertificates} from "../action/createActions";
 import {connect} from "react-redux";
 import Certificates from "../components/Certificates";
 
 const mapStateToProps = (state) => {
-    return {certificates: state.certificates, auth : state.auth}
+    return {
+        certificates: state.certificates,
+        auth: state.auth,
+        certificatesMetadata: state.certificatesMetadata
+    }
 }
 
 const mapDispatchToProps = dispatch => ({
