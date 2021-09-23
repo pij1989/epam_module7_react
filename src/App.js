@@ -4,7 +4,7 @@ import Footer from "./components/Footer";
 import './App.scss';
 import Main from "./components/Main";
 import {applyMiddleware, combineReducers, createStore} from "redux";
-import {authErrorReducer, authReducer, certificatesReducer} from "./reducers/reducers";
+import {authErrorReducer, authReducer, certificatesMetadataReducer, certificatesReducer} from "./reducers/reducers";
 import {Provider} from "react-redux";
 import LoginContainer from "./containers/LoginContainer";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
@@ -19,13 +19,14 @@ import CertificatesContainer from "./containers/CertificatesContainer";
 const rootPersistConfig = {
     key: 'root',
     storage: storage,
-    blacklist: ['authError', 'certificates']
+    blacklist: ['authError', 'certificates','certificatesMetadata']
 }
 
 const rootReducer = combineReducers({
     auth: authReducer,
     authError: authErrorReducer,
-    certificates: certificatesReducer
+    certificates: certificatesReducer,
+    certificatesMetadata: certificatesMetadataReducer
 });
 
 const persistRootReducer = persistReducer(rootPersistConfig, rootReducer);

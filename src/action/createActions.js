@@ -1,4 +1,4 @@
-import {AUTH_ERROR, AUTH_LOGIN, AUTH_LOGOUT, RECEIVE_CERTIFICATES} from "./actionTypes";
+import {AUTH_ERROR, AUTH_LOGIN, AUTH_LOGOUT, RECEIVE_CERTIFICATES, RECEIVE_CERTIFICATES_METADATA} from "./actionTypes";
 import {getCertificates} from "../services/certificate.service";
 import {checkAuth} from "../services/auth.service";
 
@@ -23,7 +23,14 @@ export const authError = (isAuthError, errorMassage) => ({
 export const receiveCertificates = (certificates) => ({
     type: RECEIVE_CERTIFICATES,
     certificates: certificates
-})
+});
+
+export const receiveCertificatesMetadata = (page, links, isLoaded) => ({
+    type: RECEIVE_CERTIFICATES_METADATA,
+    page: page,
+    links: links,
+    isLoaded: isLoaded
+});
 
 export const fetchCertificates = () => {
     return (dispatch) => {
@@ -41,12 +48,13 @@ export const fetchCertificates = () => {
             .then(
                 data => {
                     console.log(data)
-                    dispatch(receiveCertificates(data._embedded.giftCertificateModelList));
+                    let certificateList = data._embedded.giftCertificateModelList;
+                    dispatch(receiveCertificates(certificateList));
+                    dispatch(receiveCertificatesMetadata(data.page, data._links, true));
                 },
                 error => {
                     if (error.status !== 401) {
                         console.log(`${error.status} : ${error.statusText}`);
-
                     }
                 }
             )

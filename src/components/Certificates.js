@@ -1,10 +1,15 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Redirect} from "react-router-dom";
-import {Table} from "react-bootstrap";
 import Certificate from "./Certificate";
+import Error from "./Error";
+import Search from "./Search";
+import {Spinner, Table} from "react-bootstrap";
+
 
 const certificates = (props) => {
-    const {auth, certificates} = props;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [isError, setIsError] = useState(true);
+    const {auth, certificates, certificatesMetadata} = props;
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
         props.handleFetchCertificates();
@@ -14,24 +19,41 @@ const certificates = (props) => {
         return <Redirect to="/"/>;
     }
 
-    const listCertificate = certificates.map(certificate => <Certificate certificate={certificate}/>)
+    const handleClearError = () => {
+        setIsError(false);
+    }
+
+    const listCertificate = certificates.map(certificate => <Certificate key={certificate.id} certificate={certificate}/>)
 
     return (
-        <div style={{alignSelf: 'center'}}>
-            <Table striped bordered hover>
-                <thead>
-                <tr>
-                    <th>Datetime</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                </tr>
-                </thead>
-                <tbody>
-                {listCertificate}
-                </tbody>
-            </Table>
-        </div>
+        <>
+            {certificatesMetadata.isLoaded ?
+                <div>
+                    {isError ? <Error errorMessage={"Error message"} handleClearError={handleClearError}/> : null}
+                    <Search/>
+                    <Table className="mt-3" bordered hover>
+                        <thead>
+                        <tr className="table-secondary">
+                            <th>Datetime</th>
+                            <th>Title</th>
+                            <th>Tags</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {listCertificate}
+                        </tbody>
+                    </Table>
+                </div> :
+                <div className="d-flex">
+                    <Spinner className="align-self-center" animation="border" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </Spinner>
+                </div>
+            }
+        </>
     )
 }
 
