@@ -28,6 +28,7 @@ export const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('role');
+    localStorage.removeItem('persist:certificatesMetadata');
 }
 
 export const checkAuth = (response) => {
@@ -66,7 +67,7 @@ export const login = (username, password) => {
                     .then(data => console.log(data));
             }
         })
-        .catch(error => console.log(error));
+        .catch(errorCertificates => console.log(errorCertificates));
 
     console.log(`User: ${user}, permission: ${permission}`)
 }*/

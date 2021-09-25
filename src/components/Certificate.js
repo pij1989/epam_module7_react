@@ -7,8 +7,8 @@ const certificate = ({certificate}) => {
         <tr className="table-light">
             <td>{certificate.createDate}</td>
             <td>{certificate.name}</td>
-            <td width='370px'>{tags !== undefined ? certificate.tags.map(tag => tag.name).join(',\n') : null}</td>
-            <td>{certificate.description}</td>
+            <td width='350px'>{tags !== undefined ? certificate.tags.map(tag => tag.name).join(',\n') : null}</td>
+            <td width='400px'>{certificate.description}</td>
             <td>{certificate.price}</td>
             <td>
                 <div>

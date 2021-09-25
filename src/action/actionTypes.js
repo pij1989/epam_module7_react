@@ -1,6 +1,9 @@
 export const AUTH_LOGIN = 'auth login';
 export const AUTH_LOGOUT = 'auth logout';
-export const AUTH_ERROR = 'auth error';
+export const AUTH_ERROR = 'auth errorCertificates';
 export const RECEIVE_CERTIFICATES = 'receive certificates';
-export const FETCH_CERTIFICATES = 'fetch certificates';
-export const RECEIVE_CERTIFICATES_METADATA = 'receive certificates metadata'
+export const RECEIVE_CERTIFICATES_METADATA = 'receive certificates metadata';
+export const CERTIFICATES_ERROR = 'certificates error';
+export const CLEAR_CERTIFICATES_ERROR = 'clear certificates error';
+export const CHANGE_IS_LOADED = 'change isLoaded'
+export const CHANGE_FILTER = 'change filter'

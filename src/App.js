@@ -4,7 +4,13 @@ import Footer from "./components/Footer";
 import './App.scss';
 import Main from "./components/Main";
 import {applyMiddleware, combineReducers, createStore} from "redux";
-import {authErrorReducer, authReducer, certificatesMetadataReducer, certificatesReducer} from "./reducers/reducers";
+import {
+    authErrorReducer,
+    authReducer,
+    certificatesErrorReducer,
+    certificatesMetadataReducer,
+    certificatesReducer
+} from "./reducers/reducers";
 import {Provider} from "react-redux";
 import LoginContainer from "./containers/LoginContainer";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
@@ -15,18 +21,26 @@ import PageNotFound from "./components/PageNotFound";
 import thunkMiddleware from 'redux-thunk'
 import {createLogger} from "redux-logger";
 import CertificatesContainer from "./containers/CertificatesContainer";
+import {certificatesError} from "./action/createActions";
 
 const rootPersistConfig = {
     key: 'root',
     storage: storage,
-    blacklist: ['authError', 'certificates','certificatesMetadata']
+    blacklist: ['authError', 'certificates', 'certificatesMetadata','certificatesError']
+}
+
+const certificatesMetadataConfig = {
+    key: 'certificatesMetadata',
+    storage: storage,
+    blacklist: ['isLoaded','filter']
 }
 
 const rootReducer = combineReducers({
     auth: authReducer,
     authError: authErrorReducer,
     certificates: certificatesReducer,
-    certificatesMetadata: certificatesMetadataReducer
+    certificatesMetadata: persistReducer(certificatesMetadataConfig, certificatesMetadataReducer),
+    certificatesError: certificatesErrorReducer
 });
 
 const persistRootReducer = persistReducer(rootPersistConfig, rootReducer);

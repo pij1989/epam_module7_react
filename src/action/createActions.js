@@ -1,5 +1,14 @@
-import {AUTH_ERROR, AUTH_LOGIN, AUTH_LOGOUT, RECEIVE_CERTIFICATES, RECEIVE_CERTIFICATES_METADATA} from "./actionTypes";
-import {getCertificates} from "../services/certificate.service";
+import {
+    AUTH_ERROR,
+    AUTH_LOGIN,
+    AUTH_LOGOUT,
+    CERTIFICATES_ERROR, CHANGE_FILTER,
+    CHANGE_IS_LOADED,
+    CLEAR_CERTIFICATES_ERROR,
+    RECEIVE_CERTIFICATES,
+    RECEIVE_CERTIFICATES_METADATA
+} from "./actionTypes";
+import {getCertificates, searchCertificatesApi} from "../services/certificate.service";
 import {checkAuth} from "../services/auth.service";
 
 export const authLogin = (loggedIn, user) => ({
@@ -25,38 +34,80 @@ export const receiveCertificates = (certificates) => ({
     certificates: certificates
 });
 
-export const receiveCertificatesMetadata = (page, links, isLoaded) => ({
+export const receiveCertificatesMetadata = (page, isLoaded) => ({
     type: RECEIVE_CERTIFICATES_METADATA,
     page: page,
-    links: links,
     isLoaded: isLoaded
 });
 
-export const fetchCertificates = () => {
+export const certificatesError = (isCertificatesError, errorMassage) => ({
+    type: CERTIFICATES_ERROR,
+    isCertificatesError: isCertificatesError,
+    errorMassage: errorMassage
+});
+
+export const clearError = () => ({
+    type: CLEAR_CERTIFICATES_ERROR,
+    isCertificatesError: false,
+    errorMassage: ''
+});
+
+export const changeIsLoaded = (isLoaded) => ({
+    type: CHANGE_IS_LOADED,
+    isLoaded: isLoaded
+});
+
+export const changeFilter = (filter) =>({
+    type: CHANGE_FILTER,
+    filter: filter
+});
+
+export const fetchCertificates = (number, size) => {
     return (dispatch) => {
-        getCertificates()
-            .then(response => {
-                if (!checkAuth(response)) {
-                    dispatch(authLogout());
-                    return Promise.reject({status: response.status, statusText: response.statusText});
-                }
-                if (response.status < 200 || (response.status >= 300 && response.status !== 401)) {
-                    return Promise.reject({status: response.status, statusText: response.statusText});
-                }
-                return response.json();
-            })
-            .then(
-                data => {
-                    console.log(data)
-                    let certificateList = data._embedded.giftCertificateModelList;
-                    dispatch(receiveCertificates(certificateList));
-                    dispatch(receiveCertificatesMetadata(data.page, data._links, true));
-                },
-                error => {
-                    if (error.status !== 401) {
-                        console.log(`${error.status} : ${error.statusText}`);
-                    }
-                }
-            )
+        handleFetchCertificates(getCertificates(number, size), dispatch);
     }
+}
+
+export const searchCertificates = (filter, number, size) => {
+    return (dispatch) => {
+        handleFetchCertificates(searchCertificatesApi(filter, number, size), dispatch);
+    }
+}
+
+const handleFetchCertificates = (result, dispatch) => {
+    result
+        .then(response => {
+            if (!checkAuth(response)) {
+                dispatch(authLogout());
+                return Promise.reject({status: response.status, statusText: response.statusText});
+            }
+            if (response.status < 200 || (response.status >= 300 && response.status !== 401)) {
+                return response.json().then(data => {
+                    let errorMessage = 'Error is occurred';
+                    if (data.errorMessage) {
+                        errorMessage = data.errorMessage;
+                    }
+                    console.log(data.errorMessage);
+                    return Promise.reject({
+                        status: response.status,
+                        statusText: response.statusText ? response.statusText : errorMessage
+                    });
+                });
+            }
+            return response.json();
+        })
+        .then(
+            data => {
+                console.log(data)
+                let certificateList = data._embedded.giftCertificateModelList;
+                dispatch(receiveCertificates(certificateList));
+                dispatch(receiveCertificatesMetadata(data.page, true));
+            },
+            error => {
+                if (error.status !== 401) {
+                    dispatch(certificatesError(true, `${error.status} : ${error.statusText}`));
+                    dispatch(changeIsLoaded(true));
+                }
+            }
+        )
 }
