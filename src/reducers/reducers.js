@@ -7,7 +7,9 @@ import {
     CHANGE_IS_LOADED,
     CLEAR_CERTIFICATES_ERROR,
     RECEIVE_CERTIFICATES,
-    RECEIVE_CERTIFICATES_METADATA
+    RECEIVE_CERTIFICATES_METADATA,
+    SORT_BY_CREATE_DATE,
+    SORT_BY_NAME
 } from "../action/actionTypes";
 
 export const authReducer = (state = {}, action) => {
@@ -59,6 +61,8 @@ const initialStateCertificatesMetadata = {
         number: 1
     },
     filter: '',
+    sort: 'createDate',
+    order: 'asc',
     isLoaded: false
 }
 
@@ -84,6 +88,18 @@ export const certificatesMetadataReducer = (state = initialStateCertificatesMeta
             return {
                 ...state,
                 filter: action.filter
+            }
+        case SORT_BY_CREATE_DATE:
+            return {
+                ...state,
+                sort: action.sort,
+                order: action.order
+            }
+        case SORT_BY_NAME:
+            return {
+                ...state,
+                sort: action.sort,
+                order: action.order
             }
         default:
             return state;

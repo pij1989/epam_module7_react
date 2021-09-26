@@ -1,22 +1,34 @@
 import React from "react";
 import Pagination from "@mui/material/Pagination";
 
-const pagination = ({page, handleFetchCertificates}) => {
+const pagination = ({page, handleFetchCertificates, handleSearchCertificates, filter, sort, order}) => {
     console.log(page)
 
     const handleNumberPageChange = (event, value) => {
         console.log(`Page: ${value}`);
-        handleFetchCertificates(value, page.size);
+        if (filter.trim() === '') {
+            handleFetchCertificates(sort, order, value, page.size);
+        } else {
+            handleSearchCertificates(filter, value, page.size);
+        }
     }
 
     const handleRowPerPageChange = (event) => {
         let value = event.target.value;
         console.log("Row per page: " + value);
         if (page.totalElements / parseInt(value) < page.number) {
-            handleFetchCertificates(1, value);
+            if (filter.trim() === '') {
+                handleFetchCertificates(sort, order, 1, value);
+            } else {
+                handleSearchCertificates(filter, 1, value);
+            }
             return;
         }
-        handleFetchCertificates(page.number, value);
+        if (filter.trim() === '') {
+            handleFetchCertificates(sort, order, page.number, value);
+        } else {
+            handleSearchCertificates(filter, page.number, value);
+        }
     }
 
     return (

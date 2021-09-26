@@ -8,3 +8,7 @@ export async function getCertificates(number, size) {
 export async function searchCertificatesApi(filter, number, size) {
     return await fetch(`${API_URL}?filter=${filter}&page=${number}&size=${size}`);
 }
+
+export async function sortCertificatesApi(sort, order, number, size) {
+    return await fetch(`${API_URL}?sort=${sort}&order=${order}&page=${number}&size=${size}`);
+}

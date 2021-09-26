@@ -2,13 +2,16 @@ import {
     AUTH_ERROR,
     AUTH_LOGIN,
     AUTH_LOGOUT,
-    CERTIFICATES_ERROR, CHANGE_FILTER,
+    CERTIFICATES_ERROR,
+    CHANGE_FILTER,
     CHANGE_IS_LOADED,
     CLEAR_CERTIFICATES_ERROR,
     RECEIVE_CERTIFICATES,
-    RECEIVE_CERTIFICATES_METADATA
+    RECEIVE_CERTIFICATES_METADATA,
+    SORT_BY_CREATE_DATE,
+    SORT_BY_NAME
 } from "./actionTypes";
-import {getCertificates, searchCertificatesApi} from "../services/certificate.service";
+import {searchCertificatesApi, sortCertificatesApi} from "../services/certificate.service";
 import {checkAuth} from "../services/auth.service";
 
 export const authLogin = (loggedIn, user) => ({
@@ -57,20 +60,39 @@ export const changeIsLoaded = (isLoaded) => ({
     isLoaded: isLoaded
 });
 
-export const changeFilter = (filter) =>({
+export const changeFilter = (filter) => ({
     type: CHANGE_FILTER,
     filter: filter
 });
 
-export const fetchCertificates = (number, size) => {
+export const sortByCreateDate = (order) => ({
+    type: SORT_BY_CREATE_DATE,
+    sort: 'createDate',
+    order: order
+});
+
+export const sortByName = (order) => ({
+    type: SORT_BY_NAME,
+    sort: 'name',
+    order: order
+});
+
+export const fetchCertificates = (sort, order, number, size) => {
     return (dispatch) => {
-        handleFetchCertificates(getCertificates(number, size), dispatch);
+        // handleFetchCertificates(getCertificates(number, size), dispatch);
+        handleFetchCertificates(sortCertificatesApi(sort, order, number, size), dispatch);
     }
 }
 
 export const searchCertificates = (filter, number, size) => {
     return (dispatch) => {
         handleFetchCertificates(searchCertificatesApi(filter, number, size), dispatch);
+    }
+}
+
+export const sortCertificates = (sort, order, number, size) => {
+    return (dispatch) => {
+        handleFetchCertificates(sortCertificatesApi(sort, order, number, size), dispatch);
     }
 }
 

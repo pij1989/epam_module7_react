@@ -7,3 +7,5 @@ export const CERTIFICATES_ERROR = 'certificates error';
 export const CLEAR_CERTIFICATES_ERROR = 'clear certificates error';
 export const CHANGE_IS_LOADED = 'change isLoaded'
 export const CHANGE_FILTER = 'change filter'
+export const SORT_BY_CREATE_DATE = 'sort by create date'
+export const SORT_BY_NAME = 'sort by name'

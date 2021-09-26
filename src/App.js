@@ -32,7 +32,7 @@ const rootPersistConfig = {
 const certificatesMetadataConfig = {
     key: 'certificatesMetadata',
     storage: storage,
-    blacklist: ['isLoaded','filter']
+    blacklist: ['isLoaded','filter','sort','order']
 }
 
 const rootReducer = combineReducers({

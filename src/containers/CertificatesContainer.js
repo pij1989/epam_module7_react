@@ -1,4 +1,12 @@
-import {changeFilter, clearError, fetchCertificates, searchCertificates} from "../action/createActions";
+import {
+    changeFilter,
+    clearError,
+    fetchCertificates,
+    searchCertificates,
+    sortByCreateDate,
+    sortByName,
+    sortCertificates
+} from "../action/createActions";
 import {connect} from "react-redux";
 import Certificates from "../components/Certificates";
 
@@ -12,17 +20,26 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    handleFetchCertificates: (number, size) => {
-        dispatch(fetchCertificates(number, size));
+    handleFetchCertificates: (sort, order, number, size) => {
+        dispatch(fetchCertificates(sort, order, number, size));
     },
     handleSearchCertificates: (filter, number, size) => {
-        dispatch(searchCertificates(filter,number,size));
+        dispatch(searchCertificates(filter, number, size));
     },
     handleClearError: () => {
         dispatch(clearError());
     },
     handleChangeFilter: (filter) => {
         dispatch(changeFilter(filter))
+    },
+    handleSortCertificates: (sort, order, number, size) => {
+        dispatch(sortCertificates(sort, order, number, size));
+    },
+    handleChangeOrderCreateDate: (order) => {
+        dispatch(sortByCreateDate(order))
+    },
+    handleChangeOrderName: (order) => {
+        dispatch(sortByName(order))
     }
 })
 

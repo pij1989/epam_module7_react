@@ -1,12 +1,16 @@
 import React from "react";
 import {Button, Form, InputGroup} from "react-bootstrap";
 
-const search = ({handleSearchCertificates, handleChangeFilter, page, filter}) => {
+const search = ({handleFetchCertificates, handleSearchCertificates, handleChangeFilter, page, filter}) => {
     console.log(page);
     console.log('Filter: ' + filter);
 
     const handleChange = (event) => {
-        handleChangeFilter(event.target.value);
+        let filter = event.target.value;
+        handleChangeFilter(filter);
+        if (filter.trim() === '') {
+            handleFetchCertificates(1, page.size);
+        }
     }
 
     const handleSubmit = (event) => {
