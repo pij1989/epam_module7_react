@@ -30,9 +30,9 @@ const certificates = (props) => {
 
     const handleClickTitleArrow = () => {
         certificatesMetadata.order === 'asc' ? props.handleChangeOrderName('desc') : props.handleChangeOrderName('asc');
-       /* console.log('Sort: ' + certificatesMetadata.sort);
-        props.handleSortCertificates('name', certificatesMetadata.order,
-            certificatesMetadata.page.number, certificatesMetadata.page.size);*/
+        /* console.log('Sort: ' + certificatesMetadata.sort);
+         props.handleSortCertificates('name', certificatesMetadata.order,
+             certificatesMetadata.page.number, certificatesMetadata.page.size);*/
     }
 
     const listCertificate = certificates.map(certificate => <Certificate key={certificate.id}
@@ -49,18 +49,28 @@ const certificates = (props) => {
                                 handleSearchCertificates={props.handleSearchCertificates}
                                 handleChangeFilter={props.handleChangeFilter}
                                 page={certificatesMetadata.page}
-                                filter={certificatesMetadata.filter}/>
+                                filter={certificatesMetadata.filter}
+                                sort={certificatesMetadata.sort}
+                                order={certificatesMetadata.order}/>
                         <Table className="mt-3" bordered hover>
                             <thead>
                             <tr className="table-secondary">
-                                <th onClick={handleClickDateTimeArrow}>{certificatesMetadata.sort === 'createDate' ?
-                                    certificatesMetadata.order === 'asc' ? <ArrowDropDownIcon/> :
-                                        <ArrowDropUpIcon/> : null} Datetime
-                                </th>
-                                <th onClick={handleClickTitleArrow}>{certificatesMetadata.sort === 'name' ?
-                                    certificatesMetadata.order === 'asc' ? <ArrowDropDownIcon/> :
-                                        <ArrowDropUpIcon/> : null} Title
-                                </th>
+                                {certificatesMetadata.filter.trim() === '' ?
+                                    <>
+                                        <th onClick={handleClickDateTimeArrow}>{certificatesMetadata.sort === 'createDate' ?
+                                            certificatesMetadata.order === 'asc' ? <ArrowDropDownIcon/> :
+                                                <ArrowDropUpIcon/> : null} Datetime
+                                        </th>
+                                        <th onClick={handleClickTitleArrow}>{certificatesMetadata.sort === 'name' ?
+                                            certificatesMetadata.order === 'asc' ? <ArrowDropDownIcon/> :
+                                                <ArrowDropUpIcon/> : null} Title
+                                        </th>
+                                    </> :
+                                    <>
+                                        <th>Datetime</th>
+                                        <th>Title</th>
+                                    </>
+                                }
                                 <th>Tags</th>
                                 <th>Description</th>
                                 <th>Price</th>

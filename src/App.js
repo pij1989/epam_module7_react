@@ -61,7 +61,7 @@ function App() {
                         <Main>
                             <Switch>
                                 <Route exact path="/" component={LoginContainer}/>
-                                <Route exact path="/home" component={CertificatesContainer}/>
+                                <Route exact path="/certificates" component={CertificatesContainer}/>
                                 <Route component={PageNotFound}/>
                             </Switch>
                         </Main>

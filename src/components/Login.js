@@ -50,7 +50,7 @@ export default (props) => {
     }, [authError.isAuthError])
 
     if (props.auth.loggedIn) {
-        return <Redirect to="/home"/>;
+        return <Redirect to="/certificates"/>;
     }
 
     const validationSchema = yup.object().shape({

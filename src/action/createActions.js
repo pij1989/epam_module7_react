@@ -129,6 +129,9 @@ const handleFetchCertificates = (result, dispatch) => {
                 if (error.status !== 401) {
                     dispatch(certificatesError(true, `${error.status} : ${error.statusText}`));
                     dispatch(changeIsLoaded(true));
+                    setTimeout(() => {
+                        dispatch(clearError())
+                    }, 1000);
                 }
             }
         )

@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Form, InputGroup} from "react-bootstrap";
 
-const search = ({handleFetchCertificates, handleSearchCertificates, handleChangeFilter, page, filter}) => {
+const search = ({handleFetchCertificates, handleSearchCertificates, handleChangeFilter, page, filter, sort, order}) => {
     console.log(page);
     console.log('Filter: ' + filter);
 
@@ -9,7 +9,7 @@ const search = ({handleFetchCertificates, handleSearchCertificates, handleChange
         let filter = event.target.value;
         handleChangeFilter(filter);
         if (filter.trim() === '') {
-            handleFetchCertificates(1, page.size);
+            handleFetchCertificates(sort, order, 1, page.size);
         }
     }
 
