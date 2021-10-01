@@ -9,7 +9,7 @@ import {
     authReducer,
     certificatesErrorReducer,
     certificatesMetadataReducer,
-    certificatesReducer
+    certificatesReducer, tagsReducer
 } from "./reducers/reducers";
 import {Provider} from "react-redux";
 import LoginContainer from "./containers/LoginContainer";
@@ -21,12 +21,11 @@ import PageNotFound from "./components/PageNotFound";
 import thunkMiddleware from 'redux-thunk'
 import {createLogger} from "redux-logger";
 import CertificatesContainer from "./containers/CertificatesContainer";
-import {certificatesError} from "./action/createActions";
 
 const rootPersistConfig = {
     key: 'root',
     storage: storage,
-    blacklist: ['authError', 'certificates', 'certificatesMetadata','certificatesError']
+    blacklist: ['authError', 'certificates', 'certificatesMetadata','certificatesError','tags']
 }
 
 const certificatesMetadataConfig = {
@@ -40,14 +39,15 @@ const rootReducer = combineReducers({
     authError: authErrorReducer,
     certificates: certificatesReducer,
     certificatesMetadata: persistReducer(certificatesMetadataConfig, certificatesMetadataReducer),
-    certificatesError: certificatesErrorReducer
+    certificatesError: certificatesErrorReducer,
+    tags: tagsReducer
 });
 
 const persistRootReducer = persistReducer(rootPersistConfig, rootReducer);
 
 const loggerMiddleware = createLogger();
 
-const store = createStore(persistRootReducer, applyMiddleware(thunkMiddleware));
+const store = createStore(persistRootReducer, applyMiddleware(thunkMiddleware,loggerMiddleware));
 
 const persistor = persistStore(store);
 

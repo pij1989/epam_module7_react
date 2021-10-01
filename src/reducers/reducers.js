@@ -1,4 +1,6 @@
 import {
+    ADD_TAG,
+    ADD_TAGS,
     AUTH_ERROR,
     AUTH_LOGIN,
     AUTH_LOGOUT,
@@ -6,6 +8,7 @@ import {
     CHANGE_FILTER,
     CHANGE_IS_LOADED,
     CLEAR_CERTIFICATES_ERROR,
+    DELETE_TAG,
     RECEIVE_CERTIFICATES,
     RECEIVE_CERTIFICATES_METADATA,
     SORT_BY_CREATE_DATE,
@@ -125,6 +128,19 @@ export const certificatesErrorReducer = (state = initialStateCertificatesError, 
                 isCertificatesError: action.isCertificatesError,
                 errorMassage: action.errorMassage
             }
+        default:
+            return state;
+    }
+}
+
+export const tagsReducer = (state = [], action) => {
+    switch (action.type) {
+        case ADD_TAG:
+            return [...state, action.tag];
+        case DELETE_TAG:
+            return state.filter((tag, index) => index !== action.index);
+        case ADD_TAGS:
+            return action.tags;
         default:
             return state;
     }

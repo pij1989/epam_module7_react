@@ -1,11 +1,12 @@
 import {
+    ADD_TAG, ADD_TAGS,
     AUTH_ERROR,
     AUTH_LOGIN,
     AUTH_LOGOUT,
     CERTIFICATES_ERROR,
     CHANGE_FILTER,
     CHANGE_IS_LOADED,
-    CLEAR_CERTIFICATES_ERROR,
+    CLEAR_CERTIFICATES_ERROR, DELETE_TAG,
     RECEIVE_CERTIFICATES,
     RECEIVE_CERTIFICATES_METADATA,
     SORT_BY_CREATE_DATE,
@@ -136,3 +137,18 @@ const handleFetchCertificates = (result, dispatch) => {
             }
         )
 }
+
+export const addTag = (tag) => ({
+    type: ADD_TAG,
+    tag: tag
+});
+
+export const deleteTag = (index) => ({
+    type: DELETE_TAG,
+    index: index
+})
+
+export const addTags = (tags) => ({
+    type: ADD_TAGS,
+    tags: tags
+})
