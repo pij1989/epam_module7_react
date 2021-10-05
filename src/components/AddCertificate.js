@@ -6,10 +6,9 @@ import TagsContainer from "../containers/TagsContainer";
 import {Formik} from "formik";
 import * as yup from "yup";
 
-const AddCertificate = () => {
+const AddCertificate = (props) => {
     const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const validationSchema = yup.object().shape({
@@ -28,13 +27,18 @@ const AddCertificate = () => {
             .min(3, 'Tag field length must not be less than 3 characters')
     });
 
+    const handleCancel = () => {
+        props.handleDeleteTags();
+        setShow(false);
+    }
+
     return (
         <>
             <Button variant="primary" onClick={handleShow}>Add new</Button>
 
             <Modal
                 show={show}
-                onHide={handleClose}
+                onHide={handleCancel}
                 backdrop="static"
                 keyboard={false}
                 centered
@@ -48,6 +52,17 @@ const AddCertificate = () => {
                         validationSchema={validationSchema}
                         onSubmit={values => {
                             console.log(values);
+                            const stringIsoDate = new Date().toISOString();
+                            const certificate = {
+                                name: values.name,
+                                description: values.description,
+                                price: values.price,
+                                duration: values.duration,
+                                createDate: stringIsoDate,
+                                lastUpdateDate: stringIsoDate,
+                            }
+                            props.handleAddCertificate(certificate, props.tags);
+                            handleCancel();
                         }}
                         initialValues={{
                             name: '',
@@ -151,7 +166,7 @@ const AddCertificate = () => {
                                 <Button className="mx-2" variant="primary" type="submit">
                                     Save
                                 </Button>
-                                <Button className="mx-2" variant="secondary">
+                                <Button className="mx-2" variant="secondary" onClick={handleCancel}>
                                     Cancel
                                 </Button>
                             </div>

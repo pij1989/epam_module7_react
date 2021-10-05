@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {authLogout} from "../action/createActions";
 import {logout} from "../services/auth.service";
 import Profile from "./Profile";
-import AddCertificate from "./AddCertificate";
+import AddCertificateContainer from "../containers/AddCertificateContainer";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default () => {
@@ -21,7 +21,7 @@ export default () => {
         <Navbar bg="dark" expand="lg" variant="dark" className="Header justify-content-between px-4">
             <div className="d-flex justify-content-start">
                 <Navbar.Brand href="#home">Admin UI</Navbar.Brand>
-                {localStorage.getItem('role') === 'ROLE_ADMIN' ? <AddCertificate/> : null}
+                {localStorage.getItem('role') === 'ROLE_ADMIN' ? <AddCertificateContainer/> : null}
             </div>
             <div className="d-flex justify-content-end">
                 {localStorage.getItem('username') ? <Profile username={localStorage.getItem('username')}/> : null}

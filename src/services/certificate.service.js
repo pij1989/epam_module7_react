@@ -1,14 +1,35 @@
-const API_URL = 'http://localhost:8081/gift_certificates';
-const headers = new Headers({'Authorization': `Bearer ${localStorage.getItem('token')}`});
+const API_URL_CERTIFICATES = 'http://localhost:8081/gift_certificates';
 
 export async function getCertificates(number, size) {
-    return await fetch(`${API_URL}?page=${number}&size=${size}`, {headers: headers});
+    return await fetch(`${API_URL_CERTIFICATES}?page=${number}&size=${size}`);
 }
 
 export async function searchCertificatesApi(filter, number, size) {
-    return await fetch(`${API_URL}?filter=${filter}&page=${number}&size=${size}`);
+    return await fetch(`${API_URL_CERTIFICATES}?filter=${filter}&page=${number}&size=${size}`);
 }
 
 export async function sortCertificatesApi(sort, order, number, size) {
-    return await fetch(`${API_URL}?sort=${sort}&order=${order}&page=${number}&size=${size}`);
+    return await fetch(`${API_URL_CERTIFICATES}?sort=${sort}&order=${order}&page=${number}&size=${size}`);
+}
+
+export async function createCertificateApi(certificate) {
+    return await fetch(`${API_URL_CERTIFICATES}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        method: 'POST',
+        body: JSON.stringify(certificate)
+    })
+}
+
+export async function createTagInGiftCertificateApi(id, tag) {
+    return await fetch(`${API_URL_CERTIFICATES}/${id}/tags`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        method: 'POST',
+        body: JSON.stringify(tag)
+    })
 }

@@ -1,18 +1,26 @@
 import {
-    ADD_TAG, ADD_TAGS,
+    ADD_TAG,
+    ADD_TAGS,
     AUTH_ERROR,
     AUTH_LOGIN,
     AUTH_LOGOUT,
     CERTIFICATES_ERROR,
     CHANGE_FILTER,
     CHANGE_IS_LOADED,
-    CLEAR_CERTIFICATES_ERROR, DELETE_TAG,
+    CLEAR_CERTIFICATES_ERROR,
+    DELETE_TAG,
+    DELETE_TAGS,
     RECEIVE_CERTIFICATES,
     RECEIVE_CERTIFICATES_METADATA,
     SORT_BY_CREATE_DATE,
     SORT_BY_NAME
 } from "./actionTypes";
-import {searchCertificatesApi, sortCertificatesApi} from "../services/certificate.service";
+import {
+    createCertificateApi,
+    createTagInGiftCertificateApi,
+    searchCertificatesApi,
+    sortCertificatesApi
+} from "../services/certificate.service";
 import {checkAuth} from "../services/auth.service";
 
 export const authLogin = (loggedIn, user) => ({
@@ -152,3 +160,53 @@ export const addTags = (tags) => ({
     type: ADD_TAGS,
     tags: tags
 })
+
+export const deleteTags = () => ({
+    type: DELETE_TAGS,
+    tags: []
+})
+
+
+export const createCertificate = (certificate, tags) => {
+    return (dispatch) => {
+        createCertificateApi(certificate)
+            .then(response => {
+                return checkResponseStatus(response);
+            })
+            .then(
+                data => {
+                    console.log(data);
+                    for (let tag of tags) {
+                        createTagInGiftCertificateApi(data.id, {name: tag.text})
+                            .then(response => {
+                                return checkResponseStatus(response);
+                            })
+                            .then(
+                                data => {
+                                    console.log(data);
+                                },
+                                error => {
+                                    console.log('ERROR: ' + error);
+                                });
+                    }
+                },
+                error => {
+                    console.log('ERROR: ' + error);
+                })
+    }
+}
+
+const checkResponseStatus = (response) => {
+    if (response.status === 201) {
+        return response.json();
+    }
+    if (response.status === 403) {
+        return Promise.reject('Accesses denied');
+    }
+    if (response.status === 401) {
+        return Promise.reject('Unauthorized');
+    }
+    if (response.status === 400) {
+        return Promise.reject('Bad request');
+    }
+}

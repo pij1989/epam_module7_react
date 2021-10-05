@@ -8,7 +8,7 @@ import {
     CHANGE_FILTER,
     CHANGE_IS_LOADED,
     CLEAR_CERTIFICATES_ERROR,
-    DELETE_TAG,
+    DELETE_TAG, DELETE_TAGS,
     RECEIVE_CERTIFICATES,
     RECEIVE_CERTIFICATES_METADATA,
     SORT_BY_CREATE_DATE,
@@ -140,6 +140,8 @@ export const tagsReducer = (state = [], action) => {
         case DELETE_TAG:
             return state.filter((tag, index) => index !== action.index);
         case ADD_TAGS:
+            return action.tags;
+        case DELETE_TAGS:
             return action.tags;
         default:
             return state;

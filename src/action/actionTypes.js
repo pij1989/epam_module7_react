@@ -12,3 +12,4 @@ export const SORT_BY_NAME = 'sort by name';
 export const ADD_TAG = 'add tag';
 export const DELETE_TAG = 'delete tag';
 export const ADD_TAGS = 'add tags';
+export const DELETE_TAGS = 'delete tags';
