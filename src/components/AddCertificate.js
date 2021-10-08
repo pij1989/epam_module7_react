@@ -38,20 +38,18 @@ const AddCertificate = (props) => {
 
             <Modal
                 show={show}
-                onHide={handleCancel}
                 backdrop="static"
                 keyboard={false}
                 centered
                 size="lg"
             >
-                <Modal.Header className="bg-secondary" closeButton>
+                <Modal.Header className="bg-secondary" >
                     <Modal.Title>Add new certificate</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Formik
                         validationSchema={validationSchema}
                         onSubmit={values => {
-                            console.log(values);
                             const stringIsoDate = new Date().toISOString();
                             const certificate = {
                                 name: values.name,
@@ -63,6 +61,7 @@ const AddCertificate = (props) => {
                             }
                             props.handleAddCertificate(certificate, props.tags);
                             handleCancel();
+                            window.location.reload();
                         }}
                         initialValues={{
                             name: '',

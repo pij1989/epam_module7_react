@@ -6,7 +6,7 @@ import Main from "./components/Main";
 import {applyMiddleware, combineReducers, createStore} from "redux";
 import {
     authErrorReducer,
-    authReducer,
+    authReducer, certificateReducer,
     certificatesErrorReducer,
     certificatesMetadataReducer,
     certificatesReducer, tagsReducer
@@ -25,13 +25,13 @@ import CertificatesContainer from "./containers/CertificatesContainer";
 const rootPersistConfig = {
     key: 'root',
     storage: storage,
-    blacklist: ['authError', 'certificates', 'certificatesMetadata','certificatesError','tags']
+    blacklist: ['authError', 'certificates', 'certificatesMetadata','certificatesError','tags','certificate']
 }
 
 const certificatesMetadataConfig = {
     key: 'certificatesMetadata',
     storage: storage,
-    blacklist: ['isLoaded','filter','sort','order']
+    blacklist: ['isLoaded','filter','sort','order','isAdded']
 }
 
 const rootReducer = combineReducers({
@@ -40,7 +40,8 @@ const rootReducer = combineReducers({
     certificates: certificatesReducer,
     certificatesMetadata: persistReducer(certificatesMetadataConfig, certificatesMetadataReducer),
     certificatesError: certificatesErrorReducer,
-    tags: tagsReducer
+    tags: tagsReducer,
+    certificate: certificateReducer
 });
 
 const persistRootReducer = persistReducer(rootPersistConfig, rootReducer);

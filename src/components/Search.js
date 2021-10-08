@@ -16,7 +16,9 @@ const search = ({handleFetchCertificates, handleSearchCertificates, handleChange
     const handleSubmit = (event) => {
         event.preventDefault();
         event.stopPropagation();
-        handleSearchCertificates(filter, 1, page.size);
+        if (filter.trim() !== '') {
+            handleSearchCertificates(filter, 1, page.size);
+        }
     }
 
     return (

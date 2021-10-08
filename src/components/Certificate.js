@@ -1,8 +1,11 @@
 import React from "react";
 import {Button} from "react-bootstrap";
+import DeleteCertificate from "./DeleteCertificate";
+import ViewCertificate from "./ViewCertificate";
 
-const certificate = ({certificate}) => {
+const certificate = ({certificate, handleDeleteCertificate, handleViewCertificate}) => {
     const tags = certificate.tags;
+
     return (
         <tr className="table-light">
             <td>{certificate.createDate}</td>
@@ -12,9 +15,9 @@ const certificate = ({certificate}) => {
             <td>{certificate.price}</td>
             <td>
                 <div>
-                    <Button variant="primary">View</Button>
+                    <ViewCertificate key={certificate.id} certificate={certificate}/>
                     <Button variant="warning">Edit</Button>
-                    <Button variant="danger">Delete</Button>
+                    <DeleteCertificate handleDeleteCertificate={handleDeleteCertificate} id={certificate.id}/>
                 </div>
             </td>
         </tr>

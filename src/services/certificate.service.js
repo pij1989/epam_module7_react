@@ -33,3 +33,17 @@ export async function createTagInGiftCertificateApi(id, tag) {
         body: JSON.stringify(tag)
     })
 }
+
+export async function deleteCertificateApi(id) {
+    return await fetch(`${API_URL_CERTIFICATES}/${id}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        method: 'DELETE'
+    })
+}
+
+export async function fetchCertificateByIdApi(id) {
+    return await fetch(`${API_URL_CERTIFICATES}/${id}`);
+}

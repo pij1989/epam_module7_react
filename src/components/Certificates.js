@@ -36,7 +36,9 @@ const certificates = (props) => {
     }
 
     const listCertificate = certificates.map(certificate => <Certificate key={certificate.id}
-                                                                         certificate={certificate}/>)
+                                                                         certificate={certificate}
+                                                                         handleDeleteCertificate={props.handleDeleteCertificate}
+                                                                         handleViewCertificate={props.handleViewCertificate}/>)
 
     return (
         <>

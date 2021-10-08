@@ -13,3 +13,5 @@ export const ADD_TAG = 'add tag';
 export const DELETE_TAG = 'delete tag';
 export const ADD_TAGS = 'add tags';
 export const DELETE_TAGS = 'delete tags';
+export const CHANGE_IS_ADDED = 'change isAdded';
+export const RECEIVE_CERTIFICATE = 'receive certificate';

@@ -1,6 +1,8 @@
 import {
     changeFilter,
     clearError,
+    deleteCertificate,
+    fetchCertificateById,
     fetchCertificates,
     searchCertificates,
     sortByCreateDate,
@@ -40,6 +42,12 @@ const mapDispatchToProps = dispatch => ({
     },
     handleChangeOrderName: (order) => {
         dispatch(sortByName(order))
+    },
+    handleDeleteCertificate: (id) => {
+        dispatch(deleteCertificate(id))
+    },
+    handleViewCertificate: (id) => {
+        dispatch(fetchCertificateById(id))
     }
 })
 

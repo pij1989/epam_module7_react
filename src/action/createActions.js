@@ -6,10 +6,12 @@ import {
     AUTH_LOGOUT,
     CERTIFICATES_ERROR,
     CHANGE_FILTER,
+    CHANGE_IS_ADDED,
     CHANGE_IS_LOADED,
     CLEAR_CERTIFICATES_ERROR,
     DELETE_TAG,
     DELETE_TAGS,
+    RECEIVE_CERTIFICATE,
     RECEIVE_CERTIFICATES,
     RECEIVE_CERTIFICATES_METADATA,
     SORT_BY_CREATE_DATE,
@@ -18,6 +20,8 @@ import {
 import {
     createCertificateApi,
     createTagInGiftCertificateApi,
+    deleteCertificateApi,
+    fetchCertificateByIdApi,
     searchCertificatesApi,
     sortCertificatesApi
 } from "../services/certificate.service";
@@ -86,6 +90,36 @@ export const sortByName = (order) => ({
     order: order
 });
 
+export const addTag = (tag) => ({
+    type: ADD_TAG,
+    tag: tag
+});
+
+export const deleteTag = (index) => ({
+    type: DELETE_TAG,
+    index: index
+});
+
+export const addTags = (tags) => ({
+    type: ADD_TAGS,
+    tags: tags
+});
+
+export const deleteTags = () => ({
+    type: DELETE_TAGS,
+    tags: []
+});
+
+export const changeIsAdded = (isAdded) => ({
+    type: CHANGE_IS_ADDED,
+    isAdded: isAdded
+});
+
+export const receiveCertificate = (certificate) => ({
+    type: RECEIVE_CERTIFICATE,
+    certificate: certificate
+});
+
 export const fetchCertificates = (sort, order, number, size) => {
     return (dispatch) => {
         // handleFetchCertificates(getCertificates(number, size), dispatch);
@@ -108,24 +142,7 @@ export const sortCertificates = (sort, order, number, size) => {
 const handleFetchCertificates = (result, dispatch) => {
     result
         .then(response => {
-            if (!checkAuth(response)) {
-                dispatch(authLogout());
-                return Promise.reject({status: response.status, statusText: response.statusText});
-            }
-            if (response.status < 200 || (response.status >= 300 && response.status !== 401)) {
-                return response.json().then(data => {
-                    let errorMessage = 'Error is occurred';
-                    if (data.errorMessage) {
-                        errorMessage = data.errorMessage;
-                    }
-                    console.log(data.errorMessage);
-                    return Promise.reject({
-                        status: response.status,
-                        statusText: response.statusText ? response.statusText : errorMessage
-                    });
-                });
-            }
-            return response.json();
+            return checkError(response, dispatch);
         })
         .then(
             data => {
@@ -146,27 +163,6 @@ const handleFetchCertificates = (result, dispatch) => {
         )
 }
 
-export const addTag = (tag) => ({
-    type: ADD_TAG,
-    tag: tag
-});
-
-export const deleteTag = (index) => ({
-    type: DELETE_TAG,
-    index: index
-})
-
-export const addTags = (tags) => ({
-    type: ADD_TAGS,
-    tags: tags
-})
-
-export const deleteTags = () => ({
-    type: DELETE_TAGS,
-    tags: []
-})
-
-
 export const createCertificate = (certificate, tags) => {
     return (dispatch) => {
         createCertificateApi(certificate)
@@ -175,7 +171,7 @@ export const createCertificate = (certificate, tags) => {
             })
             .then(
                 data => {
-                    console.log(data);
+                    let newCertificate = {...data, tags: []}
                     for (let tag of tags) {
                         createTagInGiftCertificateApi(data.id, {name: tag.text})
                             .then(response => {
@@ -183,17 +179,94 @@ export const createCertificate = (certificate, tags) => {
                             })
                             .then(
                                 data => {
-                                    console.log(data);
+                                    newCertificate.tags.push(data);
                                 },
                                 error => {
                                     console.log('ERROR: ' + error);
+                                    dispatch(certificatesError(true, `${error.status} : ${error.statusText}`));
+                                    setTimeout(() => {
+                                        dispatch(clearError())
+                                    }, 1000);
                                 });
                     }
+                    console.log(newCertificate);
+                    dispatch(changeIsAdded(true));
                 },
                 error => {
                     console.log('ERROR: ' + error);
+                    if (error.status === 401) {
+                        dispatch(authLogout());
+                    } else {
+                        dispatch(certificatesError(true, `${error.status} : ${error.statusText}`));
+                        setTimeout(() => {
+                            dispatch(clearError())
+                        }, 1000);
+                    }
                 })
     }
+}
+
+export const deleteCertificate = (id) => {
+    return (dispatch) => {
+        deleteCertificateApi(id)
+            .then(response => {
+                if (response.status === 204) {
+                    console.log('SUCCESS DELETE')
+                } else {
+                    if (response.status === 401) {
+                        dispatch(authLogout());
+                    } else {
+                        dispatch(certificatesError(true, `${response.status} : ${response.statusText}`));
+                        setTimeout(() => {
+                            dispatch(clearError())
+                        }, 1000);
+                    }
+                }
+            })
+    }
+}
+
+export const fetchCertificateById = (id) => {
+    return (dispatch) => {
+        fetchCertificateByIdApi(id)
+            .then(response => {
+                return checkError(response, dispatch);
+            })
+            .then(
+                data => {
+                    dispatch(receiveCertificate(data))
+                },
+                error => {
+                    if (error.status !== 401) {
+                        dispatch(certificatesError(true, `${error.status} : ${error.statusText}`));
+                        setTimeout(() => {
+                            dispatch(clearError())
+                        }, 1000);
+                    }
+                }
+            )
+    }
+}
+
+const checkError = (response, dispatch) => {
+    if (!checkAuth(response)) {
+        dispatch(authLogout());
+        return Promise.reject({status: response.status, statusText: response.statusText});
+    }
+    if (response.status < 200 || (response.status >= 300 && response.status !== 401)) {
+        return response.json().then(data => {
+            let errorMessage = 'Error is occurred';
+            if (data.errorMessage) {
+                errorMessage = data.errorMessage;
+            }
+            console.log(data.errorMessage);
+            return Promise.reject({
+                status: response.status,
+                statusText: response.statusText ? response.statusText : errorMessage
+            });
+        });
+    }
+    return response.json();
 }
 
 const checkResponseStatus = (response) => {
@@ -201,12 +274,21 @@ const checkResponseStatus = (response) => {
         return response.json();
     }
     if (response.status === 403) {
-        return Promise.reject('Accesses denied');
+        return Promise.reject({
+            status: response.status,
+            statusText: 'Accesses denied'
+        });
     }
     if (response.status === 401) {
-        return Promise.reject('Unauthorized');
+        return Promise.reject({
+            status: response.status,
+            statusText: 'Unauthorized'
+        });
     }
     if (response.status === 400) {
-        return Promise.reject('Bad request');
+        return Promise.reject({
+            status: response.status,
+            statusText: 'Bad request'
+        });
     }
 }

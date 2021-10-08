@@ -6,9 +6,12 @@ import {
     AUTH_LOGOUT,
     CERTIFICATES_ERROR,
     CHANGE_FILTER,
+    CHANGE_IS_ADDED,
     CHANGE_IS_LOADED,
     CLEAR_CERTIFICATES_ERROR,
-    DELETE_TAG, DELETE_TAGS,
+    DELETE_TAG,
+    DELETE_TAGS,
+    RECEIVE_CERTIFICATE,
     RECEIVE_CERTIFICATES,
     RECEIVE_CERTIFICATES_METADATA,
     SORT_BY_CREATE_DATE,
@@ -56,6 +59,15 @@ export const certificatesReducer = (state = [], action) => {
     }
 }
 
+export const certificateReducer = (state = {}, action) => {
+    switch (action.type) {
+        case RECEIVE_CERTIFICATE:
+            return action.certificate
+        default:
+            return state;
+    }
+}
+
 const initialStateCertificatesMetadata = {
     page: {
         size: 10,
@@ -65,8 +77,9 @@ const initialStateCertificatesMetadata = {
     },
     filter: '',
     sort: 'createDate',
-    order: 'asc',
-    isLoaded: false
+    order: 'desc',
+    isLoaded: false,
+    isAdded: false
 }
 
 export const certificatesMetadataReducer = (state = initialStateCertificatesMetadata, action) => {
@@ -103,6 +116,11 @@ export const certificatesMetadataReducer = (state = initialStateCertificatesMeta
                 ...state,
                 sort: action.sort,
                 order: action.order
+            }
+        case CHANGE_IS_ADDED:
+            return {
+                ...state,
+                isAdded: action.isAdded
             }
         default:
             return state;
